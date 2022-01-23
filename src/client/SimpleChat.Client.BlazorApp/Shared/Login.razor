@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using SimpleChat.Client.BlazorApp.Interfaces
+@using SimpleChat.Core.Domain.Models
+@using Blazored.Toast.Services
+@using Blazored.LocalStorage
+@using SimpleChat.Client.BlazorApp.Const
+@inject IAuthService _authService
+@inject IToastService _toastService
+
+Please, log in or <a href="register">register</a> new account.
+
+<EditForm Model="_userLogin" OnValidSubmit="SendLogin">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="_userLogin.Email" class="form-control"></InputText>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="_userLogin.Password" class="form-control" type="password"></InputText>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Logar</button>
+</EditForm>
+
+@code {
+    private UserLogin _userLogin = new();
+
+    private async void SendLogin()
+    {
+        var result = await _authService.Login(_userLogin);
+        if (result.Any())
+        {
+            foreach (var notification in result)
+                _toastService.ShowError(notification);
+        }
+        else
+        {
+            _toastService.ShowSuccess("Logged in!");
+        }
+    }
+
+}

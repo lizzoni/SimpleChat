@@ -1,0 +1,11 @@
+﻿@page "/"
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello, @context.User.Identity.Name. Welcome again!</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Welcome to Simple Chat!</h1>
+        <Login/>
+    </NotAuthorized>
+</AuthorizeView>
