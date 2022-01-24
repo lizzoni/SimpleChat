@@ -38,11 +38,13 @@ public class MessageService: IMessageService
     
     public async Task<IEnumerable<MessageResponse>> GetMessages(string roomId)
     {
-        var messages = await _roomMessageRepository.GetAllFromRoom(Guid.Parse(roomId), 50);
-        return messages.Select(m => new MessageResponse {
+        var messages = _roomMessageRepository.GetAllFromRoom(Guid.Parse(roomId), 50);
+        var result = messages.Select(m => new MessageResponse
+        {
             UserName = _userRepository.GetUserName(m.UserId),
             Text = m.Message,
             CreatedAt = m.CreatedAt
-        }).OrderBy(x => x.CreatedAt);
+        }).OrderBy(x => x.CreatedAt).ToList();
+        return await Task.FromResult(result);
     }
 }

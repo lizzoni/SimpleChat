@@ -21,8 +21,8 @@ public class RoomMessageRepository: IRoomMessageRepository
         return entityEntry.State == EntityState.Added;
     }
 
-    public async Task<IQueryable<RoomMessage>> GetAllFromRoom(Guid roomId, int count)
+    public IEnumerable<RoomMessage> GetAllFromRoom(Guid roomId, int count)
     {
-        return await Task.FromResult(_context.RoomMessages.Take(count).Where(rm => rm.RoomId == roomId));
+        return _context.RoomMessages.Where(rm => rm.RoomId == roomId).OrderByDescending(rm => rm.CreatedAt).Take(count);
     }
 }
