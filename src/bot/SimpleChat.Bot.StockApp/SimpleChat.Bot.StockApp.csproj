@@ -7,4 +7,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SimpleChat.Bot.Application\SimpleChat.Bot.Application.csproj" />
+      <ProjectReference Include="..\SimpleChat.Bot.Domain\SimpleChat.Bot.Domain.csproj" />
+      <ProjectReference Include="..\SimpleChat.Bot.Infrastructure\SimpleChat.Bot.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

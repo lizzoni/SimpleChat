@@ -2,6 +2,8 @@
 @inject ILocalStorageService _localStorage
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
+@inject IRoomService _roomService
+@implements IDisposable
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Simple Chat</a>
@@ -24,6 +26,15 @@
                         <span class="oi oi-wrench" aria-hidden="true"></span> Rooms
                     </NavLink>
                 </li>
+
+                @foreach (var room in _roomService.Rooms)
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="@GetRoomUrl(room)">
+                            <span class="oi oi-people" aria-hidden="true"></span> @room.Name
+                        </NavLink>
+                    </li>
+                }
                 <li class="nav-item px-3">
                     <a class="nav-link" @onclick="Logout" style="cursor: pointer;">
                         <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
@@ -43,8 +54,17 @@
 
 @code {
     private bool _collapseNavMenu = true;
-
     private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    protected override void OnInitialized()
+    {
+        _roomService.OnChangeRooms += StateHasChanged;
+    }
+
+    private string GetRoomUrl(RoomResponse room)
+    {
+        return $"room/{room.Id}";
+    }
 
     private void ToggleNavMenu()
     {
@@ -57,4 +77,10 @@
         await _authenticationStateProvider.GetAuthenticationStateAsync();
         _navigationManager.NavigateTo("/");
     }
+
+    public void Dispose()
+    {
+        _roomService.OnChangeRooms -= StateHasChanged;
+    }
+
 }

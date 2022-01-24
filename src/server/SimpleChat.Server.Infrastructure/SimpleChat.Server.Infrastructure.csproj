@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SimpleChat.Server.Application\SimpleChat.Server.Application.csproj" />
         <ProjectReference Include="..\SimpleChat.Server.Domain\SimpleChat.Server.Domain.csproj" />
     </ItemGroup>
 

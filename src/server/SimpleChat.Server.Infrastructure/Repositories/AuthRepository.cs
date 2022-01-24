@@ -29,6 +29,7 @@ public class AuthRepository : IAuthRepository
     {
         var user = new IdentityUser
         {
+            Id = Guid.NewGuid().ToString(),
             UserName = userRegister.Email,
             Email = userRegister.Email,
             EmailConfirmed = true,
@@ -69,6 +70,7 @@ public class AuthRepository : IAuthRepository
     {
         var user = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(user);
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
         var token = CreateToken(claims);
 
         return token;

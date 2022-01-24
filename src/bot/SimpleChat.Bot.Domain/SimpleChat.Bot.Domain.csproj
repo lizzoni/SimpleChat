@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\core\SimpleChat.Core.Domain\SimpleChat.Core.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

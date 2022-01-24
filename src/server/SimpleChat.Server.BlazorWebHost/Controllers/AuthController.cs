@@ -1,41 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleChat.Core.Domain.Models;
 using SimpleChat.Server.Application.Interfaces;
-using SimpleChat.Server.Domain.Interfaces;
 
 namespace SimpleChat.Server.BlazorWebHost.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController: Controller
+public class AuthController: ControllerBase
 {
-    private readonly INotificationContext _notificationContext;
     private readonly IAuthService _authService;
 
-    public AuthController(ILogger<AuthController> logger, INotificationContext notificationContext, IAuthService authService) : base(logger, notificationContext)
+    public AuthController( IAuthService authService)
     {
-        _notificationContext = notificationContext;
         _authService = authService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(UserRegister userRegister)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        var response = await _authService.Register(userRegister);
-        
-        return Ok(response);
+        return await CustomResponse(() => _authService.Register(userRegister));
     }
     
     [HttpPost("login")]
     public async Task<IActionResult> Login(UserLogin userLogin)
     {
+        return await CustomResponse(() => _authService.Login(userLogin));
+    }
+
+    private async Task<IActionResult> CustomResponse(Func<Task<UserLoginResponse>> func)
+    {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return BadRequest(new UserLoginResponse
+            {
+                Succeeded = false,
+                Notifications = ModelState.Values.SelectMany(x => x.Errors.Select(xx => xx.ErrorMessage))
+            });
         
-        var response = await _authService.Login(userLogin);
+        var response = await func.Invoke();
+        if (!response.Succeeded)
+            return BadRequest(response);
         
         return Ok(response);
     }

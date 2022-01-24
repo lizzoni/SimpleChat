@@ -13,7 +13,11 @@ public static class DependencyInjectionConfig
     {
         services.AddScoped<INotificationContext, NotificationContext>();
         services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IRoomMessageRepository, RoomMessageRepository>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IRoomService, RoomService>();
+        services.AddScoped<IMessageService, MessageService>();
         return services;
     }
 }
