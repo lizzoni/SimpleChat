@@ -2,5 +2,5 @@
 
 public interface IMessageBroker
 {
-    Task SendMessage(string roomId, string message);
+    Task SendMessage(string roomId, DateTime createdAt, string message);
 }

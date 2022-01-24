@@ -8,5 +8,6 @@ public interface IRoomService
     IEnumerable<RoomResponse> Rooms { get; set; }
     Task<RoomCreateResponse> Create(RoomCreate roomCreate);
     Task<IEnumerable<RoomResponse>> GetAll();
+    Task<IEnumerable<MessageResponse>> GetMessages(string roomId);
     Task UpdateRooms();
 }

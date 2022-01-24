@@ -4,7 +4,7 @@ using SimpleChat.Core.Domain.Models;
 
 namespace SimpleChat.Client.BlazorApp.Services;
 
-public class RoomService: IRoomService
+public class RoomService : IRoomService
 {
     private readonly HttpClient _httpClient;
 
@@ -20,7 +20,7 @@ public class RoomService: IRoomService
     {
         var result = await _httpClient.PostAsJsonAsync("api/room", roomCreate);
         var response = await result.Content.ReadFromJsonAsync<RoomCreateResponse>();
-        if (!response.Succeeded) 
+        if (!response.Succeeded)
             return response;
         await UpdateRooms();
         return response;
@@ -29,8 +29,27 @@ public class RoomService: IRoomService
     public async Task<IEnumerable<RoomResponse>> GetAll()
     {
         var result = await _httpClient.GetAsync("api/room");
-        var response = await result.Content.ReadFromJsonAsync<IEnumerable<RoomResponse>>();
-        return response ?? new List<RoomResponse>();
+        try
+        {
+            return (await result.Content.ReadFromJsonAsync<IEnumerable<RoomResponse>>())!;
+        }
+        catch (Exception)
+        {
+            return new List<RoomResponse>();
+        }
+    }
+
+    public async Task<IEnumerable<MessageResponse>> GetMessages(string roomId)
+    {
+        var result = await _httpClient.GetAsync($"api/room/{roomId}");
+        try
+        {
+            return (await result.Content.ReadFromJsonAsync<IEnumerable<MessageResponse>>())!;
+        }
+        catch (Exception)
+        {
+            return new List<MessageResponse>();
+        }
     }
 
     public async Task UpdateRooms()

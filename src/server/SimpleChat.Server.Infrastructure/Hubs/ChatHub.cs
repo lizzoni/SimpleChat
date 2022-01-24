@@ -16,15 +16,14 @@ public class ChatHub: Hub, IMessageBroker
         _messageService = messageService;
     }
     
-    public async Task SendMessage(string roomId, string message)
+    public async Task SendMessage(string roomId, DateTime createdAt, string message)
     {
         var userId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //Context.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
         var userName = Context.User.Identity.Name;
 
-        await _messageService.PostMessage(userId, roomId, message);
+        await _messageService.PostMessage(userId, roomId, createdAt, message);
         
         Console.WriteLine($"[{roomId}] {userName}: {message}");
-        await Clients.All.SendAsync(roomId, userName, message);
+        await Clients.All.SendAsync(roomId, createdAt, userName, message);
     }
 }

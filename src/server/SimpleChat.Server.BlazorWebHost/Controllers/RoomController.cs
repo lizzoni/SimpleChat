@@ -13,10 +13,12 @@ namespace SimpleChat.Server.BlazorWebHost.Controllers;
 public class RoomController : ControllerBase
 {
     private readonly IRoomService _roomService;
+    private readonly IMessageService _messageService;
 
-    public RoomController(IRoomService roomService)
+    public RoomController(IRoomService roomService, IMessageService messageService)
     {
         _roomService = roomService;
+        _messageService = messageService;
     }
 
     [HttpPost]
@@ -42,6 +44,15 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var response = await _roomService.GetAll();
+        if (!response.Any())
+            return NoContent();
+        return Ok(response);
+    }
+    
+    [HttpGet("{roomId}")]
+    public async Task<IActionResult> GetMessages(string roomId)
+    {
+        var response = await _messageService.GetMessages(roomId);
         if (!response.Any())
             return NoContent();
         return Ok(response);

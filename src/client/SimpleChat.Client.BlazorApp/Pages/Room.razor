@@ -40,35 +40,52 @@
     private readonly List<string> _messages = new();
     private string? _userName;
     private string? _messageInput;
+    private string? _accessToken;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userName = state.User.Identity.Name;
-
-        var accessToken = await _localStorageService.GetItemAsStringAsync(AuthConst.AccessToken);
+        _messages.Clear();
+        var msg = await _roomService.GetMessages(RoomId);
+        foreach (var messageResponse in msg)
+            _messages.Add($"{messageResponse.CreatedAt:g} - {messageResponse.UserName}: {messageResponse.Text}");
+        
+        if (_hubConnection is not null)
+        {
+            if (_hubConnection?.State == HubConnectionState.Connected)
+                await _hubConnection.StopAsync();
+            await _hubConnection.DisposeAsync();
+        }
+        
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(_navigationManager.ToAbsoluteUri("/chathub"), options =>
             {
-                options.AccessTokenProvider = () => Task.FromResult(accessToken.Replace("\"", ""))!;
+                options.AccessTokenProvider = () => Task.FromResult(_accessToken.Replace("\"", ""))!;
             })
             .Build();
 
-        _hubConnection.On<string, string>(RoomId, (user, message) =>
+        _hubConnection.On<DateTime, string, string>(RoomId, (createdAt, userName, message) =>
         {
-            var encodedMsg = $"{user}: {message}";
-            _messages.Add(encodedMsg);
+            var newMessage = $"{createdAt:g} - {userName}: {message}";
+            _messages.Add(newMessage);
             StateHasChanged();
         });
 
         await _hubConnection.StartAsync();
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _userName = state.User.Identity?.Name;
+        
+        _accessToken = await _localStorageService.GetItemAsStringAsync(AuthConst.AccessToken);
     }
 
     private async Task Send()
     {
         if (_hubConnection is not null)
         {
-            await _hubConnection.SendAsync("SendMessage", RoomId, _messageInput);
+            await _hubConnection.SendAsync("SendMessage", RoomId, DateTime.UtcNow, _messageInput);
         }
     }
 
