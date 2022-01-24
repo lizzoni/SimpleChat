@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using SimpleChat.Core.Domain.Interfaces;
 using SimpleChat.Server.Application.Interfaces;
-using SimpleChat.Server.Domain.Interfaces;
 
 namespace SimpleChat.Server.Repository.Hubs;
 
 [Authorize]
-public class ChatHub: Hub, IMessageBroker
+public class ChatHub: Hub, IMessageBrokerServer
 {
     private readonly IMessageService _messageService;
 

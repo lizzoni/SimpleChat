@@ -1,13 +1,13 @@
 ﻿@page "/room/{roomId}"
-@using Microsoft.AspNetCore.SignalR.Client
 @using SimpleChat.Client.BlazorApp.Const
 @using System.Linq
+@using SimpleChat.Core.Client
+@using SimpleChat.Core.Domain.Interfaces
 @inject NavigationManager _navigationManager
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject ILocalStorageService _localStorageService
 @inject IRoomService _roomService
 @inject IToastService _toastService
-@implements IAsyncDisposable
 @attribute [Authorize]
 
 <h3>Room: @_roomService.Rooms.Single(x => x.Id.ToString() == RoomId).Name</h3>
@@ -24,7 +24,7 @@
             <input @bind="_messageInput" size="50"/>
         </label>
     </div>
-    <button type="submit" disabled="@(!IsConnected)" class="btn btn-primary">Send</button>
+    <button type="submit" disabled="@(!_messageBroker?.IsConnected())" class="btn btn-primary">Send</button>
 </EditForm>
 <hr>
 
@@ -40,7 +40,7 @@
     [Parameter]
     public string? RoomId { get; set; }
 
-    private HubConnection? _hubConnection;
+    private IMessageBrokerClient? _messageBroker;
     private readonly List<string> _messages = new();
     private string? _userName;
     private string? _messageInput;
@@ -51,32 +51,26 @@
         _messages.Clear();
         var msg = await _roomService.GetMessages(RoomId);
         foreach (var messageResponse in msg)
-            _messages.Add($"{messageResponse.CreatedAt:g} - {messageResponse.UserName}: {messageResponse.Text}");
+            _messages.Add($"[{messageResponse.CreatedAt:g}] {messageResponse.UserName}: {messageResponse.Text}");
 
-        if (_hubConnection is not null)
+        if (_messageBroker != null)
         {
-            if (_hubConnection?.State == HubConnectionState.Connected)
-                await _hubConnection.StopAsync();
-            await _hubConnection.DisposeAsync();
+            await _messageBroker.Stop();
+            _messageBroker = null;
         }
-
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(_navigationManager.ToAbsoluteUri("/chathub"), options => { options.AccessTokenProvider = () => Task.FromResult(_accessToken.Replace("\"", ""))!; })
-            .Build();
-
-        _hubConnection.On<DateTime, string, string>(RoomId, (createdAt, userName, message) =>
+        _messageBroker = new MessageBrokerClient(_navigationManager.BaseUri, _accessToken!, RoomId);
+        _messageBroker.On((createdAt, userName, message) =>
         {
             if (message.First() == '/')
                 return;
 
-            var newMessage = $"{createdAt:g} - {userName}: {message}";
+            var newMessage = $"[{createdAt:g}] {userName}: {message}";
             _messages.Add(newMessage);
             if (_messages.Count > 50)
                 _messages.RemoveAt(0);
             StateHasChanged();
         });
-
-        await _hubConnection.StartAsync();
+        await _messageBroker.Start();
     }
 
     protected override async Task OnInitializedAsync()
@@ -95,22 +89,9 @@
             return;
         }
 
-        if (_hubConnection is not null)
-        {
-            await _hubConnection.SendAsync("SendMessage", RoomId, DateTime.UtcNow, _messageInput);
-            _messageInput = string.Empty;
-            StateHasChanged();
-        }
-    }
-
-    private bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_hubConnection is not null)
-        {
-            await _hubConnection.DisposeAsync();
-        }
+        await _messageBroker.SendMessage(_messageInput);
+        _messageInput = string.Empty;
+        StateHasChanged();
     }
 
 }

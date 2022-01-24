@@ -7,3 +7,4 @@ builder.Services.AddSimpleChatConfiguration(configuration);
 var app = builder.Build();
 app.UseSimpleChatConfiguration();
 app.Run();
+

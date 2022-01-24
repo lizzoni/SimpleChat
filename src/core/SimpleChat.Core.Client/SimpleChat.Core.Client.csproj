@@ -7,12 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.1" />
+      <ProjectReference Include="..\SimpleChat.Core.Domain\SimpleChat.Core.Domain.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\..\core\SimpleChat.Core.Client\SimpleChat.Core.Client.csproj" />
-      <ProjectReference Include="..\SimpleChat.Bot.Domain\SimpleChat.Bot.Domain.csproj" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.1" />
     </ItemGroup>
 
 </Project>
