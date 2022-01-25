@@ -2,5 +2,5 @@
 
 public interface ILoginRepository
 {
-    Task<string> GetToken();
+    Task<string> GetToken(string url, string email, string password);
 }

@@ -14,7 +14,7 @@ public static class MessageBrokerConfig
 
     public static IApplicationBuilder UseMessageBrokerConfiguration(this WebApplication app)
     {
-        app.MapHub<ChatHub>("/chathub");
+        app.MapHub<MessageBrokerServer>("/chathub");
         return app;
     }
 }

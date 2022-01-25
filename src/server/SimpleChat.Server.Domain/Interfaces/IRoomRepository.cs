@@ -4,7 +4,7 @@ namespace SimpleChat.Server.Domain.Interfaces;
 
 public interface IRoomRepository
 {
-    Task<Guid?> Add(Guid userId, string name);
+    Task<Guid?> Add(Guid userId, string roomName);
     Task<bool> Remove(Guid roomId);
     Task<Room?> Get(Guid roomId);
     Task<Room?> Get(string name);

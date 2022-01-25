@@ -27,7 +27,7 @@ public class Bot : IBot
         string accessToken;
         do
         {
-            accessToken = await _loginRepository.GetToken();
+            accessToken = await _loginRepository.GetToken(_loginSettings.Url, _loginSettings.Email, _loginSettings.Password);
             if (accessToken != string.Empty)
                 continue;
             Console.WriteLine("Server offline... Retrying in 5 seconds");

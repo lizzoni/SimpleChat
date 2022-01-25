@@ -7,11 +7,11 @@ using SimpleChat.Server.Application.Interfaces;
 namespace SimpleChat.Server.Repository.Hubs;
 
 [Authorize]
-public class ChatHub: Hub, IMessageBrokerServer
+public class MessageBrokerServer: Hub, IMessageBrokerServer
 {
     private readonly IMessageService _messageService;
 
-    public ChatHub(IMessageService messageService)
+    public MessageBrokerServer(IMessageService messageService)
     {
         _messageService = messageService;
     }

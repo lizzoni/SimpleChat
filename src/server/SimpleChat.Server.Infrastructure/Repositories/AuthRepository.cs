@@ -56,12 +56,6 @@ public class AuthRepository : IAuthRepository
         if (result.Succeeded)
             return await GenerateJwt(userLogin.Email);
 
-        if (result.IsLockedOut)
-        {
-            _notification.AddNotification("User temporarily blocked by invalid attempts");
-            return string.Empty;
-        }
-
         _notification.AddNotification("Incorrect username or password");
         return string.Empty;
     }

@@ -37,6 +37,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Core.Client", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Bot.IoC", "src\bot\SimpleChat.Bot.IoC\SimpleChat.Bot.IoC.csproj", "{0D3AB22A-64C3-427B-979D-856DB51CC5DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Server.Infrastructure.UnitTests", "src\server\SimpleChat.Server.Infrastructure.UnitTests\SimpleChat.Server.Infrastructure.UnitTests.csproj", "{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Server.Application.UnitTests", "src\server\SimpleChat.Server.Application.UnitTests\SimpleChat.Server.Application.UnitTests.csproj", "{02E79701-1C1E-4B94-895D-3EEEE31F45FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Bot.Application.UnitTests", "src\bot\SimpleChat.Bot.Application.UnitTests\SimpleChat.Bot.Application.UnitTests.csproj", "{407C11C4-3ED0-441D-90CE-E823B6ACE973}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Bot.Infrastructure.UnitTests", "src\bot\SimpleChat.Bot.Infrastructure.UnitTests\SimpleChat.Bot.Infrastructure.UnitTests.csproj", "{593F6C80-528E-40EE-A7DE-F6E14D5CB91B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +67,10 @@ Global
 		{8D470DFD-F24C-478B-8C39-78843FFF5245} = {6F425AEE-18B8-4684-B79C-7338A4BA4CAB}
 		{C54DDF42-2421-4185-89FF-D95272434934} = {7A098509-BD26-46F3-AA38-5AD9729E5743}
 		{0D3AB22A-64C3-427B-979D-856DB51CC5DE} = {8A4FBEFC-B393-43FC-8AF0-2A64E1CE1EAE}
+		{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57} = {6F425AEE-18B8-4684-B79C-7338A4BA4CAB}
+		{02E79701-1C1E-4B94-895D-3EEEE31F45FF} = {6F425AEE-18B8-4684-B79C-7338A4BA4CAB}
+		{407C11C4-3ED0-441D-90CE-E823B6ACE973} = {8A4FBEFC-B393-43FC-8AF0-2A64E1CE1EAE}
+		{593F6C80-528E-40EE-A7DE-F6E14D5CB91B} = {8A4FBEFC-B393-43FC-8AF0-2A64E1CE1EAE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1E0C7EDD-3CB7-4537-97A4-97D7558E4335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -113,5 +125,21 @@ Global
 		{0D3AB22A-64C3-427B-979D-856DB51CC5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D3AB22A-64C3-427B-979D-856DB51CC5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D3AB22A-64C3-427B-979D-856DB51CC5DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF551EF-77D5-4FE5-87C5-1F2C74C83B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E79701-1C1E-4B94-895D-3EEEE31F45FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E79701-1C1E-4B94-895D-3EEEE31F45FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E79701-1C1E-4B94-895D-3EEEE31F45FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E79701-1C1E-4B94-895D-3EEEE31F45FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{407C11C4-3ED0-441D-90CE-E823B6ACE973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{407C11C4-3ED0-441D-90CE-E823B6ACE973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{407C11C4-3ED0-441D-90CE-E823B6ACE973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{407C11C4-3ED0-441D-90CE-E823B6ACE973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593F6C80-528E-40EE-A7DE-F6E14D5CB91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593F6C80-528E-40EE-A7DE-F6E14D5CB91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593F6C80-528E-40EE-A7DE-F6E14D5CB91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593F6C80-528E-40EE-A7DE-F6E14D5CB91B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

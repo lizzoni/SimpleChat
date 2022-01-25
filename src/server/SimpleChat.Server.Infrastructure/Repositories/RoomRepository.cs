@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SimpleChat.Core.Domain.Extensions;
 using SimpleChat.Server.Domain.Interfaces;
 using SimpleChat.Server.Domain.Models;
 using SimpleChat.Server.Repository.Data;
@@ -10,26 +12,34 @@ namespace SimpleChat.Server.Repository.Repositories;
 public class RoomRepository : IRoomRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<RoomRepository> _logger;
 
-    public RoomRepository(ApplicationDbContext context)
+    public RoomRepository(ApplicationDbContext context, ILogger<RoomRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
     
-    public async Task<Guid?> Add(Guid userId, string name)
+    public async Task<Guid?> Add(Guid userId, string roomName)
     {
         var room = new Room
         {
             Id = Guid.NewGuid(),
-            Name = name,
+            Name = roomName,
             UserId = userId,
             CreatedAt = DateTime.UtcNow
         };
-        var entityEntry = await _context.Rooms.AddAsync(room);
-        if (entityEntry.State != EntityState.Added)
+        try
+        {
+            await _context.Rooms.AddAsync(room);
+            await _context.SaveChangesAsync();
+            return room.Id;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(() => e.Message);
             return null;
-        await _context.SaveChangesAsync();
-        return room.Id;
+        }
     }
 
     public async Task<bool> Remove(Guid roomId)
@@ -37,10 +47,18 @@ public class RoomRepository : IRoomRepository
         var room = await Get(roomId);
         if (room == null)
             return false;
-        
-        var entityEntry = _context.Rooms.Remove(room);
-        await _context.SaveChangesAsync();
-        return entityEntry.State == EntityState.Added;
+
+        try
+        {
+            _context.Rooms.Remove(room);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(() => e.Message);
+            return false;
+        }
     }
 
     public async Task<Room?> Get(Guid roomId)

@@ -14,6 +14,6 @@ public class UserRepository: IUserRepository
     }
     public string GetUserName(Guid userId)
     {
-       return _context.UserClaims.Where(x => x.UserId == userId.ToString() && x.ClaimType == ClaimTypes.Name).Select(x => x.ClaimValue).FirstOrDefault();
+        return _context.UserClaims.Where(x => x.UserId == userId.ToString() && x.ClaimType == ClaimTypes.Name).Select(x => x.ClaimValue).FirstOrDefault() ?? string.Empty;
     }
 }
