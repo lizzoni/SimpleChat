@@ -18,6 +18,7 @@ This application should allow several users to talk in a chatroom and also to ge
 - Manager user (edit, remove)
 - Manager rooms (edit, remove)
 - Make the look more pleasant
+- Create docker compose file
  
 ## Techs
 - .NET 6.0
